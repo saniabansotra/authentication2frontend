@@ -1,30 +1,70 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Toast } from "react-toastify/dist/components";
 import axios from "axios";
+import { toast } from "react-toastify";
 const Login = () => {
-  const [name, setname] = useState("");
-  const [email, setemail] = useState("");
-  const [isOptSent, setisOtpSent] = useState(false);
-  const [otp, setotp] = useState("");
-
   const navigate = useNavigate();
-  const handleLogin = () => {
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+  const [isSentotp, setisSetotp] = useState(false);
+  const [otp, setotp] = useState("");
+  const handleLogin = async () => {
     try {
-      const response = axios.post("/signup", {
-        name: name,
+      if (email.trim() === "") return toast.warning("Please enter your email");
+      if (password.trim() === "")
+        return toast.warning("Please enter your password");
+      const response = await axios.post("/login", {
         email: email,
         password: password,
       });
-      if (response.data.success === "true") {
-        toast.success("successfully registered");
-      } else {
-        toast.warning(success.data.error);
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setisSetotp(true);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      if (
+        error &&
+        error.response &&
+        error.response.data &&
+        error.response.data.error
+      ) {
+        toast.error(error.response.data.error);
+      }
+    }
+  };
+  const handleOtpVerify = async () => {
+    try {
+      if (email.trim() === "") return toast.warning("Please enter your email");
+      if (password.trim() === "")
+        return toast.warning("Please enter your password");
+      const response = await axios.post("/login", {
+        email: email,
+        password: password,
+        code: otp,
+      });
+      if (response.data.success) {
+        toast.success("Welcome to Famebook");
+        navigate("/profile");
+      }
+    } catch (error) {
+      console.log(error);
+      if (
+        error &&
+        error.response &&
+        error.response.data &&
+        error.response.data.error
+      ) {
+        toast.error(error.response.data.error);
+      }
+    }
   };
   return (
     <>
+      <div>
+        <h1>HELLO</h1>
+      </div>
+      <label>Email</label>
       <input
         type="email"
         value={email}
@@ -33,6 +73,7 @@ const Login = () => {
         }}
       />
       <br />
+      <label>Password</label>
       <input
         type="password"
         value={password}
@@ -41,41 +82,42 @@ const Login = () => {
         }}
       />
       <br />
-      {isOptSent ? (
+      <br />
+      {isSentotp ? (
         <>
-          <div>
-            <label>Enter Otp sent on Your phone Number</label>
-            <input
-              value={otp}
-              onChange={(e) => setotp(e.target.value)}
-              type="number"
-            />
-          </div>
+          <label>Enter Otp send on your number</label>
+          <input
+            type="number"
+            value={otp}
+            onChange={(e) => {
+              setotp(e.target.value);
+            }}
+          />
         </>
       ) : (
-        <></>
+        <> </>
       )}
-
-      <div>
-        <button
-          type="button"
-          onClick={() => {
-            if (isOptSent) {
-              handleotpVerify();
-            } else {
-              handleLogin();
-            }
-          }}
-        >
-          Login
-        </button>
-      </div>
       <br />
-      <br />
-      <h3> New User ???</h3>
-      <button type="button" onClick={(navigate = "/signup")}>
-        Signup
+      <button
+        type="button"
+        onClick={() => {
+          if (isSentotp) {
+            handleOtpVerify();
+          } else {
+            handleLogin();
+          }
+        }}
+      >
+        Login
       </button>
+      <h3> Not Registered??</h3>
+      <span
+        onClick={() => {
+          navigate("/signup");
+        }}
+      >
+        Signup Here
+      </span>
     </>
   );
 };
