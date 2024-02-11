@@ -61,63 +61,70 @@ const Login = () => {
   };
   return (
     <>
+      <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+      </div>
       <div>
         <h1>HELLO</h1>
       </div>
-      <label>Email</label>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => {
-          setemail(e.target.value);
-        }}
-      />
-      <br />
-      <label>Password</label>
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => {
-          setpassword(e.target.value);
-        }}
-      />
-      <br />
-      <br />
-      {isSentotp ? (
-        <>
-          <label>Enter Otp send on your number</label>
-          <input
-            type="number"
-            value={otp}
-            onChange={(e) => {
-              setotp(e.target.value);
-            }}
-          />
-        </>
-      ) : (
-        <> </>
-      )}
-      <br />
-      <button
-        type="button"
-        onClick={() => {
-          if (isSentotp) {
-            handleOtpVerify();
-          } else {
-            handleLogin();
-          }
-        }}
-      >
-        Login
-      </button>
-      <h3> Not Registered??</h3>
-      <span
-        onClick={() => {
-          navigate("/signup");
-        }}
-      >
-        Signup Here
-      </span>
+      <form>
+        <label>Email</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => {
+            setemail(e.target.value);
+          }}
+        />
+        <br />
+        <label>Password</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => {
+            setpassword(e.target.value);
+          }}
+        />
+        <br />
+        <br />
+        {isSentotp ? (
+          <>
+            <label>Enter Otp send on your number</label>
+            <input
+              type="number"
+              value={otp}
+              onChange={(e) => {
+                setotp(e.target.value);
+              }}
+            />
+          </>
+        ) : (
+          <> </>
+        )}
+        <br />
+        <button
+          class="button"
+          type="button"
+          onClick={() => {
+            if (isSentotp) {
+              handleOtpVerify();
+            } else {
+              handleLogin();
+            }
+          }}
+        >
+          Login
+        </button>
+        <h3> Not Registered??</h3>
+        <span
+          onClick={() => {
+            navigate("/signup");
+          }}
+        >
+          Signup Here
+        </span>
+      </form>
     </>
   );
 };
